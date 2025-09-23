@@ -1,4 +1,4 @@
-package com.example.smartbmicalculator;
+package com.ritesh.bmi.calculator;
 
 import org.junit.Test;
 

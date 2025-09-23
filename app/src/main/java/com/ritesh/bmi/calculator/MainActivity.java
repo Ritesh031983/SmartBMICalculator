@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         RadioGroup radioGroupHeightUnit = findViewById(R.id.radioGroupHeightUnit);
         RadioGroup radioGroupWeightUnit = findViewById(R.id.radioGroupWeightUnit);
 
-        this.computeBMI = new ComputeBMI(this.editTextWeight, this.editTextHeight, textViewResult);
+        computeBMI = new ComputeBMI(this.editTextWeight, this.editTextHeight, textViewResult);
 
         // Set a listener on the RadioGroup to update isWeightInKg
         radioGroupWeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
@@ -83,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonCalculate.setOnClickListener(v -> {
-            this.computeBMI.setIsHeightInCM(this.isHeightInCM);
-            this.computeBMI.setIsWeightInKg(this.isWeightInKg);
-            this.computeBMI.compute(MainActivity.this);
+            computeBMI.setIsHeightInCM(this.isHeightInCM);
+            computeBMI.setIsWeightInKg(this.isWeightInKg);
+            computeBMI.compute(this);
         });
     }
 
@@ -172,9 +172,9 @@ public class MainActivity extends AppCompatActivity {
                 radioButtonCm.setChecked(true);
                 isHeightInCM = true;
             }
-            this.computeBMI.setIsWeightInKg(this.isWeightInKg);
-            this.computeBMI.setIsHeightInCM(this.isHeightInCM);
-            this.computeBMI.compute(this);
+            computeBMI.setIsWeightInKg(this.isWeightInKg);
+            computeBMI.setIsHeightInCM(this.isHeightInCM);
+            computeBMI.compute(this);
         } else {
             Toast.makeText(this, R.string.could_not_understand_weight_height, Toast.LENGTH_LONG).show();
             // You could also try to parse more complex sentences or provide more specific feedback

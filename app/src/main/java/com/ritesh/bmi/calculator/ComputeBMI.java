@@ -5,6 +5,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ritesh.bmi.calculator.output.BMIResult;
+import com.ritesh.bmi.calculator.util.Conversion;
 
 public class ComputeBMI {
     private final EditText editTextWeight;
@@ -65,19 +66,18 @@ public class ComputeBMI {
             if (isWeightInKg) {
                 weightInKg = weight;
             } else {
-                weightInKg = weight * 0.453592f; // Convert pounds to kilograms
+                weightInKg = Conversion.convertPoundsToKilograms(weight);
             }
 
             float heightInMeters;
             if (isHeightInCM) {
-                heightInMeters = (float) height / 100; // Convert cm to meters
+                heightInMeters = Conversion.convertCmToMeters(height);
             } else {
-                heightInMeters = height * 0.0254f; // Convert inches to meters
+                heightInMeters = Conversion.convertInchesToMeters(height);
             }
 
             // Calculate BMI: weight (kg) / (height (m))^2
-            float bmi = weightInKg / (heightInMeters * heightInMeters);
-            BMIResult bmiResult = new BMIResult(bmi, textViewResult);
+            BMIResult bmiResult = new BMIResult(Conversion.calculateBMI(weightInKg, heightInMeters), textViewResult);
             bmiResult.displayResult();
 
         } catch (NumberFormatException e) {

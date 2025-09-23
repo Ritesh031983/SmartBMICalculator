@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SPEECH_INPUT = 100;
     private EditText editTextWeight;
     private EditText editTextHeight;
+    private boolean isWeightInKg = true; // Default to true as "kg" is checked by default
     private boolean isHeightInCM = true; // Default to true as "cm" is checked by default
     private ComputeBMI computeBMI;
 
@@ -43,7 +44,23 @@ public class MainActivity extends AppCompatActivity {
         Button buttonCalculate = findViewById(R.id.buttonCalculate);
         TextView textViewResult = findViewById(R.id.textViewResult);
         RadioGroup radioGroupHeightUnit = findViewById(R.id.radioGroupHeightUnit);
+        RadioGroup radioGroupWeightUnit = findViewById(R.id.radioGroupWeightUnit);
+
         this.computeBMI = new ComputeBMI(this.editTextWeight, this.editTextHeight, textViewResult);
+
+        // Set a listener on the RadioGroup to update isWeightInKg
+        radioGroupWeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
+            // checkedId is the RadioButton selected
+            if (checkedId == R.id.radioButtonKg) {
+                // "kg" is selected
+                isWeightInKg = true;
+                editTextWeight.setHint(R.string.enter_weight_kg_hint);
+            } else if (checkedId == R.id.radioButtonPound) {
+                // "pound" is selected
+                isWeightInKg = false;
+                editTextWeight.setHint(R.string.enter_weight_pound_hint);
+            }
+        });
 
         // Set a listener on the RadioGroup to update isHeightInCM
         radioGroupHeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
@@ -51,13 +68,11 @@ public class MainActivity extends AppCompatActivity {
             if (checkedId == R.id.radioButtonCm) {
                 // "cm" is selected
                 isHeightInCM = true;
-                editTextHeight.setHint("Enter height (cm)");
-                // Perform actions for cm
+                editTextHeight.setHint(R.string.enter_height_cm_hint);
             } else if (checkedId == R.id.radioButtonInch) {
                 // "inch" is selected
                 isHeightInCM = false;
-                editTextHeight.setHint("Enter height (inch)");
-                // Perform actions for inch
+                editTextHeight.setHint(R.string.enter_height_inch_hint);
             }
         });
 
@@ -69,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonCalculate.setOnClickListener(v -> {
             this.computeBMI.setIsHeightInCM(this.isHeightInCM);
+            this.computeBMI.setIsWeightInKg(this.isWeightInKg);
             this.computeBMI.compute(MainActivity.this);
         });
     }
@@ -109,18 +125,21 @@ public class MainActivity extends AppCompatActivity {
     private void parseSpokenTextAndCalculateBmi(String spokenText) {
         // Regex to find weight and height values
         // This is a basic regex, you might need to make it more robust for different phrasing
-        Pattern weightPattern = Pattern.compile("(?:weight|wait) (?:is\\s*)?(\\d+)\\s*kg"); // Matches "weight is 60 kg" or "weight 60.5 kg" or "wait is 50 kg"
+        Pattern weightPattern = Pattern.compile("(?:weight|wait|where) (?:is\\s*)?(\\d+)\\s*(kg|pound|pond)"); // Matches "weight is 60 kg" or "weight 60.5 pound" or "wait is 50 pound"
         Pattern heightPattern = Pattern.compile("height (?:is\\s*)?(\\d+)\\s*(cm|inch)"); // Matches "height is 160" or "height is 160.5"
 
         Matcher weightMatcher = weightPattern.matcher(spokenText.toLowerCase());
         Matcher heightMatcher = heightPattern.matcher(spokenText.toLowerCase());
 
         String weightStr = null;
+        String weightUnit = null;
+
         String heightStr = null;
         String heightUnit = null;
 
         if (weightMatcher.find()) {
             weightStr = weightMatcher.group(1);
+            weightUnit = weightMatcher.group(2);
         }
 
         if (heightMatcher.find()) {
@@ -131,6 +150,18 @@ public class MainActivity extends AppCompatActivity {
         if (weightStr != null && heightStr != null) {
             editTextWeight.setText(weightStr);
             editTextHeight.setText(heightStr);
+
+            if ((weightUnit != null) && (weightUnit.equalsIgnoreCase("pound") || weightUnit.equalsIgnoreCase("pond"))) {
+                RadioButton radioButtonPound = findViewById(R.id.radioButtonPound);
+                radioButtonPound.setChecked(true);
+                isWeightInKg = false;
+            }
+            else {
+                RadioButton radioButtonKg = findViewById(R.id.radioButtonKg);
+                radioButtonKg.setChecked(true);
+                isWeightInKg = true;
+            }
+
             if ((heightUnit != null) && heightUnit.equalsIgnoreCase("inch")) {
                 RadioButton radioButtonInch = findViewById(R.id.radioButtonInch);
                 radioButtonInch.setChecked(true);
@@ -141,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 radioButtonCm.setChecked(true);
                 isHeightInCM = true;
             }
+            this.computeBMI.setIsWeightInKg(this.isWeightInKg);
             this.computeBMI.setIsHeightInCM(this.isHeightInCM);
             this.computeBMI.compute(this);
         } else {

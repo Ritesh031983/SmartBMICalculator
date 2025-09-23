@@ -11,6 +11,7 @@ public class ComputeBMI {
     private final EditText editTextHeight;
     private final TextView textViewResult;
     private boolean isHeightInCM;
+    private boolean isWeightInKg;
 
     public ComputeBMI(EditText editTextWeight,
                       EditText editTextHeight,
@@ -23,6 +24,10 @@ public class ComputeBMI {
 
     public void setIsHeightInCM(boolean isHeightInCM) {
         this.isHeightInCM = isHeightInCM;
+    }
+
+    public void setIsWeightInKg(boolean isWeightInKg) {
+        this.isWeightInKg = isWeightInKg;
     }
 
     /**
@@ -56,6 +61,13 @@ public class ComputeBMI {
                 return;
             }
 
+            float weightInKg;
+            if (isWeightInKg) {
+                weightInKg = weight;
+            } else {
+                weightInKg = weight * 0.453592f; // Convert pounds to kilograms
+            }
+
             float heightInMeters;
             if (isHeightInCM) {
                 heightInMeters = (float) height / 100; // Convert cm to meters
@@ -64,7 +76,7 @@ public class ComputeBMI {
             }
 
             // Calculate BMI: weight (kg) / (height (m))^2
-            float bmi = weight / (heightInMeters * heightInMeters);
+            float bmi = weightInKg / (heightInMeters * heightInMeters);
             BMIResult bmiResult = new BMIResult(bmi, textViewResult);
             bmiResult.displayResult();
 

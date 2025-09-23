@@ -62,19 +62,8 @@ public class ComputeBMI {
                 return;
             }
 
-            float weightInKg;
-            if (isWeightInKg) {
-                weightInKg = weight;
-            } else {
-                weightInKg = Conversion.convertPoundsToKilograms(weight);
-            }
-
-            float heightInMeters;
-            if (isHeightInCM) {
-                heightInMeters = Conversion.convertCmToMeters(height);
-            } else {
-                heightInMeters = Conversion.convertInchesToMeters(height);
-            }
+            float weightInKg = isWeightInKg ? weight : Conversion.convertPoundsToKilograms(weight);
+            float heightInMeters = isHeightInCM ? Conversion.convertCmToMeters(height) : Conversion.convertInchesToMeters(height);
 
             // Calculate BMI: weight (kg) / (height (m))^2
             BMIResult bmiResult = new BMIResult(Conversion.calculateBMI(weightInKg, heightInMeters), textViewResult);

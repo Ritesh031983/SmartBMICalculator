@@ -167,9 +167,9 @@
 
         <ImageView
             android:id="@+id/imageViewIndicator"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="bottom|start"
+            android:layout_width="77dp"
+            android:layout_height="125dp"
+            android:layout_gravity="bottom|center_horizontal"
             android:contentDescription="@string/bmi_indicator"
             android:src="@drawable/indicator" />
     </FrameLayout>

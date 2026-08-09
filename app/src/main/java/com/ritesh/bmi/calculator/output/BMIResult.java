@@ -36,10 +36,13 @@ public class BMIResult {
         final float percentage = calcPercentage;
 
         layoutBMIResult.post(() -> {
-            int layoutWidth = layoutBMIResult.getWidth();
-            int indicatorWidth = imageViewIndicator.getWidth();
-            float translationX = (layoutWidth * percentage) - (indicatorWidth / 2f);
-            imageViewIndicator.setTranslationX(translationX);
+            // Set pivot to bottom center for rotation
+            imageViewIndicator.setPivotX(imageViewIndicator.getWidth() / 2f);
+            imageViewIndicator.setPivotY(imageViewIndicator.getHeight());
+
+            // Calculate rotation angle (-90 to 90 degrees)
+            float rotation = (percentage * 180f) - 90f;
+            imageViewIndicator.setRotation(rotation);
         });
 
         EBMICategory bmiCategory = EBMICategory.fromBmi(bmi);

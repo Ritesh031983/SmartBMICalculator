@@ -1,30 +1,24 @@
 package com.ritesh.bmi.calculator.util;
 
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+
 /**
- * Utility class
+ * Utility class using functional interfaces.
  */
-public class Conversion {
+public final class Conversion {
     private Conversion() {}
 
-    public static float convertInchesToMeters(float inches) {
-        return inches * 0.0254f;
-    }
+    public static final UnaryOperator<Float> convertInchesToMeters = inches -> inches * 0.0254f;
 
-    public static float convertPoundsToKilograms(float pounds) {
-        return pounds * 0.453592f;
-    }
+    public static final UnaryOperator<Float> convertPoundsToKilograms = pounds -> pounds * 0.453592f;
 
-    public static float convertCmToMeters(int cm) {
-        return (float) cm / 100;
-    }
+    public static final Function<Integer, Float> convertCmToMeters = cm -> (float) cm / 100;
 
     /**
      * Calculate BMI
-     * @param weight weight in kg
-     * @param height height in meters
-     * @return weight (kg) / (height (m))^2
+     * Formula: weight (kg) / (height (m))^2
      */
-    public static float calculateBMI(float weight, float height) {
-        return weight / (height * height);
-    }
+    public static final BinaryOperator<Float> calculateBMI = (weight, height) -> weight / (height * height);
 }

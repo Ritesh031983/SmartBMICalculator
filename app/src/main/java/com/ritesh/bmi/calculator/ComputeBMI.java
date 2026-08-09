@@ -1,6 +1,8 @@
 package com.ritesh.bmi.calculator;
 
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,16 +13,22 @@ public class ComputeBMI {
     private final EditText editTextWeight;
     private final EditText editTextHeight;
     private final TextView textViewResult;
+    private final View layoutBMIResult;
+    private final ImageView imageViewIndicator;
     private boolean isHeightInCM;
     private boolean isWeightInKg;
 
     public ComputeBMI(EditText editTextWeight,
                       EditText editTextHeight,
-                      TextView textViewResult
+                      TextView textViewResult,
+                      View layoutBMIResult,
+                      ImageView imageViewIndicator
     ) {
         this.editTextWeight = editTextWeight;
         this.editTextHeight = editTextHeight;
         this.textViewResult = textViewResult;
+        this.layoutBMIResult = layoutBMIResult;
+        this.imageViewIndicator = imageViewIndicator;
     }
 
     public void setIsHeightInCM(boolean isHeightInCM) {
@@ -66,7 +74,12 @@ public class ComputeBMI {
             float heightInMeters = isHeightInCM ? Conversion.convertCmToMeters(height) : Conversion.convertInchesToMeters(height);
 
             // Calculate BMI: weight (kg) / (height (m))^2
-            BMIResult bmiResult = new BMIResult(Conversion.calculateBMI(weightInKg, heightInMeters), textViewResult);
+            BMIResult bmiResult = new BMIResult(
+                    Conversion.calculateBMI(weightInKg, heightInMeters),
+                    textViewResult,
+                    layoutBMIResult,
+                    imageViewIndicator
+            );
             bmiResult.displayResult();
 
         } catch (NumberFormatException e) {

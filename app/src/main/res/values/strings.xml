@@ -22,4 +22,6 @@
     <string name="enter_height_cm_hint">Enter height (cm)</string>
     <string name="enter_height_inch_hint">Enter height (inch)</string>
     <string name="pound">Pound</string>
+    <string name="bmi_chart">BMI Chart</string>
+    <string name="bmi_indicator">BMI Indicator</string>
 </resources>

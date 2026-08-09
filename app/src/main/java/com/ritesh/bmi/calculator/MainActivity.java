@@ -7,6 +7,7 @@ import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -43,10 +44,18 @@ public class MainActivity extends AppCompatActivity {
         editTextHeight = findViewById(R.id.editTextHeight);
         Button buttonCalculate = findViewById(R.id.buttonCalculate);
         TextView textViewResult = findViewById(R.id.textViewResult);
+        View layoutBMIResult = findViewById(R.id.layoutBMIResult);
+        ImageView imageViewIndicator = findViewById(R.id.imageViewIndicator);
         RadioGroup radioGroupHeightUnit = findViewById(R.id.radioGroupHeightUnit);
         RadioGroup radioGroupWeightUnit = findViewById(R.id.radioGroupWeightUnit);
 
-        computeBMI = new ComputeBMI(this.editTextWeight, this.editTextHeight, textViewResult);
+        computeBMI = new ComputeBMI(
+                this.editTextWeight,
+                this.editTextHeight,
+                textViewResult,
+                layoutBMIResult,
+                imageViewIndicator
+        );
 
         // Set a listener on the RadioGroup to update isWeightInKg
         radioGroupWeightUnit.setOnCheckedChangeListener((group, checkedId) -> {

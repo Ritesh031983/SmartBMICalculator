@@ -12,8 +12,6 @@
     <string name="please_enter_height">Please enter height</string>
     <string name="please_enter_valid_numbers">Please enter valid numbers for weight and height</string>
     <string name="suggestion">Say something like: weight is 60kg and height is 160cm</string>
-    <string name="enter_height_cm">Enter height (cm)</string>
-    <string name="enter_height_inch">Enter height (inch)</string>
     <string name="inch">inch</string>
     <string name="cm">cm</string>
     <string name="kg">kg</string>

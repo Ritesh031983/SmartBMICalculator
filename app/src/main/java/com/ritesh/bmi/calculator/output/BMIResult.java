@@ -42,6 +42,11 @@ public class BMIResult {
 
             // Calculate rotation angle (-90 to 90 degrees)
             float rotation = (percentage * 180f) - 90f;
+            
+            // Clamp rotation to avoid going out of boundary at extreme values
+            if (rotation < -85f) rotation = -85f;
+            if (rotation > 85f) rotation = 85f;
+            
             imageViewIndicator.setRotation(rotation);
         });
 

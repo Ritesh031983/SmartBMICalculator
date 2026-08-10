@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.ritesh.bmi.calculator"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.ritesh.bmi.calculator"

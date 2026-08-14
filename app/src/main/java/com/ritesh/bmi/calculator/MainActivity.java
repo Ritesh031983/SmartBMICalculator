@@ -7,13 +7,15 @@ import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -26,12 +28,24 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_SPEECH_INPUT = 100;
     private EditText editTextWeight;
     private EditText editTextHeight;
     private boolean isWeightInKg = true; // Default to true as "kg" is checked by default
     private boolean isHeightInCM = true; // Default to true as "cm" is checked by default
     private ComputeBMI computeBMI;
+
+    private final ActivityResultLauncher<Intent> speechResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    ArrayList<String> resultArray = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    if (resultArray != null && !resultArray.isEmpty()) {
+                        String spokenText = resultArray.get(0);
+                        parseSpokenTextAndCalculateBmi(spokenText);
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +57,28 @@ public class MainActivity extends AppCompatActivity {
         editTextHeight = findViewById(R.id.editTextHeight);
         Button buttonCalculate = findViewById(R.id.buttonCalculate);
         TextView textViewResult = findViewById(R.id.textViewResult);
+        View layoutBMIResult = findViewById(R.id.layoutBMIResult);
+        ImageView imageViewIndicator = findViewById(R.id.imageViewIndicator);
         RadioGroup radioGroupHeightUnit = findViewById(R.id.radioGroupHeightUnit);
         RadioGroup radioGroupWeightUnit = findViewById(R.id.radioGroupWeightUnit);
 
-        computeBMI = new ComputeBMI(this.editTextWeight, this.editTextHeight, textViewResult);
+        computeBMI = new ComputeBMI(
+                this.editTextWeight,
+                this.editTextHeight,
+                textViewResult,
+                layoutBMIResult,
+                imageViewIndicator
+        );
 
         // Set a listener on the RadioGroup to update isWeightInKg
         radioGroupWeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
-            // checkedId is the RadioButton selected
+            // checkedId is the RadioButton checked
             if (checkedId == R.id.radioButtonKg) {
-                // "kg" is selected
+                // "kg" is checked
                 isWeightInKg = true;
                 editTextWeight.setHint(R.string.enter_weight_kg_hint);
             } else if (checkedId == R.id.radioButtonPound) {
-                // "pound" is selected
+                // "pound" is checked
                 isWeightInKg = false;
                 editTextWeight.setHint(R.string.enter_weight_pound_hint);
             }
@@ -64,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Set a listener on the RadioGroup to update isHeightInCM
         radioGroupHeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
-            // checkedId is the RadioButton selected
+            // checkedId is the RadioButton checked
             if (checkedId == R.id.radioButtonCm) {
-                // "cm" is selected
+                // "cm" is checked
                 isHeightInCM = true;
                 editTextHeight.setHint(R.string.enter_height_cm_hint);
             } else if (checkedId == R.id.radioButtonInch) {
-                // "inch" is selected
+                // "inch" is checked
                 isHeightInCM = false;
                 editTextHeight.setHint(R.string.enter_height_inch_hint);
             }
@@ -96,24 +118,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, R.string.suggestion);
 
         try {
-            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+            speechResultLauncher.launch(intent);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, R.string.speech_recognition_not_supported, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
-            if (resultCode == RESULT_OK && data != null) {
-                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (result != null && !result.isEmpty()) {
-                    String spokenText = result.get(0);
-                    parseSpokenTextAndCalculateBmi(spokenText);
-                }
-            }
         }
     }
 

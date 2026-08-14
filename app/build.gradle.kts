@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace = "com.ritesh.bmi.calculator"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.ritesh.bmi.calculator"
         minSdk = 31
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.1"
+        targetSdk = 35
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -19,6 +19,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -26,8 +27,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

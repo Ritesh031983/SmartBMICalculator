@@ -145,15 +145,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutHeight" />
 
+    <FrameLayout
+        android:id="@+id/layoutBMIResult"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCalculate">
+
+        <ImageView
+            android:id="@+id/imageViewBMI"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/bmi_chart"
+            android:src="@drawable/bmi" />
+
+        <ImageView
+            android:id="@+id/imageViewIndicator"
+            android:layout_width="77dp"
+            android:layout_height="95dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="@string/bmi_indicator"
+            android:src="@drawable/indicator" />
+    </FrameLayout>
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textViewResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text=""
         android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCalculate" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutBMIResult" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

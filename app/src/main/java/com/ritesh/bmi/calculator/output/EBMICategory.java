@@ -17,7 +17,7 @@ public enum EBMICategory {
     UNKNOWN("Unknown", -1, -1, Color.BLACK),
     UNDERWEIGHT("Underweight", 0, 18.5, Color.BLUE),
     NORMAL_WEIGHT("Normal weight", 18.5, 24.9, Color.GREEN),
-    OVERWEIGHT("Overweight", 24.9, 29.9, Color.YELLOW),
+    OVERWEIGHT("Overweight", 24.9, 29.9, Color.rgb(250, 197, 5)),
     OBESE_1("Obese Class 1", 29.9, 34.9, Color.rgb(255, 165, 0)),  //Orange
     OBESE_2("Obese Class 2", 34.9, 39.9, Color.RED),
     OBESE_3("Obese Class 3 / Severe Obesity", 39.9, Double.MAX_VALUE, Color.rgb(128, 0, 128)); //Purple

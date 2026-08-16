@@ -16,9 +16,10 @@ public class SpeechParser {
         record Failure(String weightStr, String weightUnit, String heightStr, String heightUnit) implements ParsingResult {}
     }
 
+    @SuppressWarnings("all")
     public static ParsingResult parse(String spokenText) {
         Pattern weightPattern = Pattern.compile("(\\d+(?:\\.\\d+)?)\\s*(kg|kilogram|pound|pond)");
-        Pattern heightPattern = Pattern.compile("(?:(\\d+(?:\\.\\d+)?)\\s*(?:ft|foot|feet)(?:\\s*(?:and\\s*)?(\\d+(?:\\.\\d+)?)\\s*(?:in|inch|inches)?)?)|(?:(\\d+(?:\\.\\d+)?)\\s*(cm|in|inch|inches))");
+        Pattern heightPattern = Pattern.compile("(?:(\\d+(?:\\.\\d+)?)\\s*(?:ft|foot|feet|feat|fit)(?:\\s*(?:and\\s*)?(\\d+(?:\\.\\d+)?)\\s*(?:in|inch|inches)?)?)|(?:(\\d+(?:\\.\\d+)?)\\s*(cm|in|inch|inches))");
 
         Matcher weightMatcher = weightPattern.matcher(spokenText.toLowerCase());
         Matcher heightMatcher = heightPattern.matcher(spokenText.toLowerCase());
@@ -40,7 +41,7 @@ public class SpeechParser {
         if (heightMatcher.find()) {
             if (Objects.nonNull(heightMatcher.group(1))) { // Foot and inch case
                 try {
-                    double feet = Double.parseDouble(heightMatcher.group(1));
+                    double feet = Double.parseDouble(Objects.requireNonNull(heightMatcher.group(1)));
                     double inches = Double.parseDouble(Objects.requireNonNullElse(heightMatcher.group(2), "0"));
                     
                     heightStr = String.valueOf(Conversion.convertFeetAndInchesToInches.apply(feet, inches));

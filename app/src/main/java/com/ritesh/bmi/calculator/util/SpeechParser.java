@@ -1,5 +1,6 @@
 package com.ritesh.bmi.calculator.util;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,8 +23,7 @@ public class SpeechParser {
         if (weightMatcher.find()) {
             weightStr = weightMatcher.group(1);
             String rawUnit = weightMatcher.group(2);
-            weightUnit = switch (rawUnit) {
-                case "kg", "kilogram" -> "kg";
+            weightUnit = switch (Objects.requireNonNullElse(rawUnit, "")) {
                 case "pound", "pond" -> "pound";
                 default -> "kg";
             };
@@ -32,30 +32,26 @@ public class SpeechParser {
         String heightStr = null;
         String heightUnit = null;
         if (heightMatcher.find()) {
-            if (heightMatcher.group(1) != null) { // Foot and inch case
+            if (Objects.nonNull(heightMatcher.group(1))) { // Foot and inch case
                 try {
                     double feet = Double.parseDouble(heightMatcher.group(1));
-                    double inches = 0;
-                    if (heightMatcher.group(2) != null) {
-                        inches = Double.parseDouble(heightMatcher.group(2));
-                    }
+                    double inches = Double.parseDouble(Objects.requireNonNullElse(heightMatcher.group(2), "0"));
+                    
                     heightStr = String.valueOf(Conversion.convertFeetAndInchesToInches.apply(feet, inches));
                     heightUnit = "inch";
-                } catch (NumberFormatException e) {
-                    heightStr = null;
+                } catch (NumberFormatException ignored) {
                 }
-            } else if (heightMatcher.group(3) != null) { // cm or inch case
+            } else if (Objects.nonNull(heightMatcher.group(3))) { // cm or inch case
                 heightStr = heightMatcher.group(3);
                 String unit = heightMatcher.group(4);
-                heightUnit = switch (unit) {
+                heightUnit = switch (Objects.requireNonNullElse(unit, "")) {
                     case "cm" -> "cm";
-                    case "in", "inch", "inches" -> "inch";
                     default -> "inch";
                 };
             }
         }
 
-        if (weightStr != null && heightStr != null) {
+        if (Objects.nonNull(weightStr) && Objects.nonNull(heightStr)) {
             return new ParsingResult.Success(weightStr, weightUnit, heightStr, heightUnit);
         } else {
             return new ParsingResult.Failure(weightStr, heightStr);

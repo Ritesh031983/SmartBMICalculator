@@ -1,5 +1,6 @@
 package com.ritesh.bmi.calculator.util;
 
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -9,6 +10,8 @@ import java.util.function.UnaryOperator;
  */
 public final class Conversion {
     private Conversion() {}
+
+    public static final BiFunction<Double, Double, Double> convertFeetAndInchesToInches = (feet, inches) -> (feet * 12) + inches;
 
     public static final UnaryOperator<Float> convertInchesToMeters = inches -> inches * 0.0254f;
 

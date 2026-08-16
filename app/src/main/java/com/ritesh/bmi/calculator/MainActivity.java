@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.ritesh.bmi.calculator.util.Conversion;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -146,9 +147,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void parseSpokenTextAndCalculateBmi(String spokenText) {
         // Regex to find weight and height values
-        // This is a basic regex, you might need to make it more robust for different phrasing
-        Pattern weightPattern = Pattern.compile("(?:weight|wait|where) (?:is\\s*)?(\\d+)\\s*(kg|pound|pond)"); // Matches "weight is 60 kg" or "weight 60.5 pound" or "wait is 50 pound"
-        Pattern heightPattern = Pattern.compile("height (?:is\\s*)?(\\d+)\\s*(cm|inch)"); // Matches "height is 160" or "height is 160.5"
+        // Finds weight and height from anywhere in the statement
+        Pattern weightPattern = Pattern.compile("(\\d+(?:\\.\\d+)?)\\s*(kg|kilogram|pound|pond)");
+        // Matches: 5 foot 10 inch, 5 feet, 170 cm, 60 inch
+        Pattern heightPattern = Pattern.compile("(?:(\\d+(?:\\.\\d+)?)\\s*(?:ft|foot|feet)(?:\\s*(?:and\\s*)?(\\d+(?:\\.\\d+)?)\\s*(?:in|inch|inches)?)?)|(?:(\\d+(?:\\.\\d+)?)\\s*(cm|in|inch|inches))");
 
         Matcher weightMatcher = weightPattern.matcher(spokenText.toLowerCase());
         Matcher heightMatcher = heightPattern.matcher(spokenText.toLowerCase());
@@ -165,8 +167,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (heightMatcher.find()) {
-            heightStr = heightMatcher.group(1);
-            heightUnit = heightMatcher.group(2);
+            if (heightMatcher.group(1) != null) { // Foot and inch case
+                try {
+                    double feet = Double.parseDouble(heightMatcher.group(1));
+                    double inches = 0;
+                    if (heightMatcher.group(2) != null) {
+                        inches = Double.parseDouble(heightMatcher.group(2));
+                    }
+                    heightStr = String.valueOf(Conversion.convertFeetAndInchesToInches.apply(feet, inches));
+                    heightUnit = "inch";
+                } catch (NumberFormatException e) {
+                    heightStr = null;
+                }
+            } else if (heightMatcher.group(3) != null) { // cm or inch case
+                heightStr = heightMatcher.group(3);
+                String unit = heightMatcher.group(4);
+                if (unit != null && unit.equalsIgnoreCase("cm")) {
+                    heightUnit = "cm";
+                } else {
+                    heightUnit = "inch";
+                }
+            }
         }
 
         if (weightStr != null && heightStr != null) {

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.ritesh.bmi.calculator.util.Conversion;
+import com.ritesh.bmi.calculator.util.SpeechParser;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,8 +26,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -146,49 +144,12 @@ public class MainActivity extends AppCompatActivity {
      * @param spokenText Text spoken by the user.
      */
     private void parseSpokenTextAndCalculateBmi(String spokenText) {
-        // Regex to find weight and height values
-        // Finds weight and height from anywhere in the statement
-        Pattern weightPattern = Pattern.compile("(\\d+(?:\\.\\d+)?)\\s*(kg|kilogram|pound|pond)");
-        // Matches: 5 foot 10 inch, 5 feet, 170 cm, 60 inch
-        Pattern heightPattern = Pattern.compile("(?:(\\d+(?:\\.\\d+)?)\\s*(?:ft|foot|feet)(?:\\s*(?:and\\s*)?(\\d+(?:\\.\\d+)?)\\s*(?:in|inch|inches)?)?)|(?:(\\d+(?:\\.\\d+)?)\\s*(cm|in|inch|inches))");
+        SpeechParser.ParsingResult result = SpeechParser.parse(spokenText);
 
-        Matcher weightMatcher = weightPattern.matcher(spokenText.toLowerCase());
-        Matcher heightMatcher = heightPattern.matcher(spokenText.toLowerCase());
-
-        String weightStr = null;
-        String weightUnit = null;
-
-        String heightStr = null;
-        String heightUnit = null;
-
-        if (weightMatcher.find()) {
-            weightStr = weightMatcher.group(1);
-            weightUnit = weightMatcher.group(2);
-        }
-
-        if (heightMatcher.find()) {
-            if (heightMatcher.group(1) != null) { // Foot and inch case
-                try {
-                    double feet = Double.parseDouble(heightMatcher.group(1));
-                    double inches = 0;
-                    if (heightMatcher.group(2) != null) {
-                        inches = Double.parseDouble(heightMatcher.group(2));
-                    }
-                    heightStr = String.valueOf(Conversion.convertFeetAndInchesToInches.apply(feet, inches));
-                    heightUnit = "inch";
-                } catch (NumberFormatException e) {
-                    heightStr = null;
-                }
-            } else if (heightMatcher.group(3) != null) { // cm or inch case
-                heightStr = heightMatcher.group(3);
-                String unit = heightMatcher.group(4);
-                if (unit != null && unit.equalsIgnoreCase("cm")) {
-                    heightUnit = "cm";
-                } else {
-                    heightUnit = "inch";
-                }
-            }
-        }
+        String weightStr = result.weightStr;
+        String weightUnit = result.weightUnit;
+        String heightStr = result.heightStr;
+        String heightUnit = result.heightUnit;
 
         if (weightStr != null && heightStr != null) {
             editTextWeight.setText(weightStr);

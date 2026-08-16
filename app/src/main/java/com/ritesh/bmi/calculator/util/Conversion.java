@@ -11,7 +11,7 @@ import java.util.function.UnaryOperator;
 public final class Conversion {
     private Conversion() {}
 
-    public static final BiFunction<Double, Double, Double> convertFeetAndInchesToInches = (feet, inches) -> (feet * 12) + inches;
+    public static final BiFunction<Double, Double, Integer> convertFeetAndInchesToInches = (feet, inches) -> (int) ((feet * 12) + inches);
 
     public static final UnaryOperator<Float> convertInchesToMeters = inches -> inches * 0.0254f;
 

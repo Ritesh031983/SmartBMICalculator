@@ -6,18 +6,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-public class BMIResult {
-    private final float bmi;
-    private final TextView textViewResult;
-    private final View layoutBMIResult;
-    private final ImageView imageViewIndicator;
-
-    public BMIResult(float bmi, TextView textViewResult, View layoutBMIResult, ImageView imageViewIndicator) {
-        this.bmi = bmi;
-        this.textViewResult = textViewResult;
-        this.layoutBMIResult = layoutBMIResult;
-        this.imageViewIndicator = imageViewIndicator;
-    }
+public record BMIResult(float bmi, TextView textViewResult, View layoutBMIResult, ImageView imageViewIndicator) {
 
     /**
      * Displays the BMI result
@@ -27,9 +16,9 @@ public class BMIResult {
         
         // Calculate position for the indicator
         // Assuming the scale is roughly linear from BMI 15 to 40
-        float minBmi = 15f;
-        float maxBmi = 40f;
-        float calcPercentage = (bmi - minBmi) / (maxBmi - minBmi);
+        var minBmi = 15f;
+        var maxBmi = 40f;
+        var calcPercentage = (bmi - minBmi) / (maxBmi - minBmi);
         if (calcPercentage < 0) calcPercentage = 0;
         if (calcPercentage > 1) calcPercentage = 1;
 

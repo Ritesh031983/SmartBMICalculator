@@ -86,30 +86,16 @@ public class MainActivity extends AppCompatActivity {
 
         // Set a listener on the RadioGroup to update isWeightInKg
         radioGroupWeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
-            // checkedId is the RadioButton checked
-            if (checkedId == R.id.radioButtonKg) {
-                // "kg" is checked
-                isWeightInKg = true;
-                textInputLayoutWeight.setHint(getString(R.string.enter_weight_kg_hint));
-            } else if (checkedId == R.id.radioButtonPound) {
-                // "pound" is checked
-                isWeightInKg = false;
-                textInputLayoutWeight.setHint(getString(R.string.enter_weight_pound_hint));
-            }
+            isWeightInKg = checkedId == R.id.radioButtonKg;
+            int hintResId = (checkedId == R.id.radioButtonKg) ? R.string.enter_weight_kg_hint : R.string.enter_weight_pound_hint;
+            textInputLayoutWeight.setHint(getString(hintResId));
         });
 
         // Set a listener on the RadioGroup to update isHeightInCM
         radioGroupHeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
-            // checkedId is the RadioButton checked
-            if (checkedId == R.id.radioButtonCm) {
-                // "cm" is checked
-                isHeightInCM = true;
-                textInputLayoutHeight.setHint(getString(R.string.enter_height_cm_hint));
-            } else if (checkedId == R.id.radioButtonInch) {
-                // "inch" is checked
-                isHeightInCM = false;
-                textInputLayoutHeight.setHint(getString(R.string.enter_height_inch_hint));
-            }
+            isHeightInCM = checkedId == R.id.radioButtonCm;
+            int hintResId = (checkedId == R.id.radioButtonCm) ? R.string.enter_height_cm_hint : R.string.enter_height_inch_hint;
+            textInputLayoutHeight.setHint(getString(hintResId));
         });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -144,14 +130,14 @@ public class MainActivity extends AppCompatActivity {
      * @param spokenText Text spoken by the user.
      */
     private void parseSpokenTextAndCalculateBmi(String spokenText) {
-        SpeechParser.ParsingResult result = SpeechParser.parse(spokenText);
+        var result = SpeechParser.parse(spokenText);
 
-        String weightStr = result.weightStr;
-        String weightUnit = result.weightUnit;
-        String heightStr = result.heightStr;
-        String heightUnit = result.heightUnit;
+        if (result instanceof SpeechParser.ParsingResult.Success success) {
+            String weightStr = success.weightStr();
+            String weightUnit = success.weightUnit();
+            String heightStr = success.heightStr();
+            String heightUnit = success.heightUnit();
 
-        if (weightStr != null && heightStr != null) {
             editTextWeight.setText(weightStr);
             editTextHeight.setText(heightStr);
 
@@ -159,8 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 RadioButton radioButtonPound = findViewById(R.id.radioButtonPound);
                 radioButtonPound.setChecked(true);
                 isWeightInKg = false;
-            }
-            else {
+            } else {
                 RadioButton radioButtonKg = findViewById(R.id.radioButtonKg);
                 radioButtonKg.setChecked(true);
                 isWeightInKg = true;
@@ -170,8 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 RadioButton radioButtonInch = findViewById(R.id.radioButtonInch);
                 radioButtonInch.setChecked(true);
                 isHeightInCM = false;
-            }
-            else {
+            } else {
                 RadioButton radioButtonCm = findViewById(R.id.radioButtonCm);
                 radioButtonCm.setChecked(true);
                 isHeightInCM = true;
@@ -179,13 +163,12 @@ public class MainActivity extends AppCompatActivity {
             computeBMI.setIsWeightInKg(this.isWeightInKg);
             computeBMI.setIsHeightInCM(this.isHeightInCM);
             computeBMI.compute(this);
-        } else {
+        } else if (result instanceof SpeechParser.ParsingResult.Failure failure) {
             Toast.makeText(this, R.string.could_not_understand_weight_height, Toast.LENGTH_LONG).show();
-            // You could also try to parse more complex sentences or provide more specific feedback
-            if (weightStr == null) {
+            if (failure.weightStr() == null) {
                 Toast.makeText(this, R.string.could_not_find_weight, Toast.LENGTH_SHORT).show();
             }
-            if (heightStr == null) {
+            if (failure.heightStr() == null) {
                 Toast.makeText(this, R.string.could_not_find_height, Toast.LENGTH_SHORT).show();
             }
         }

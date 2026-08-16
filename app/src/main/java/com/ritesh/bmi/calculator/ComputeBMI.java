@@ -48,8 +48,8 @@ public class ComputeBMI {
      * @param mainActivity Activity to show error messages
      */
     public void compute(MainActivity mainActivity) {
-        String weightStr = editTextWeight.getText().toString();
-        String heightStr = editTextHeight.getText().toString();
+        var weightStr = editTextWeight.getText().toString();
+        var heightStr = editTextHeight.getText().toString();
 
         if (weightStr.isEmpty()) {
             Toast.makeText(mainActivity, R.string.please_enter_weight, Toast.LENGTH_SHORT).show();

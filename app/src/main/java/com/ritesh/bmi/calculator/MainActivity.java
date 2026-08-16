@@ -13,6 +13,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText editTextWeight;
     private EditText editTextHeight;
+    private TextInputLayout textInputLayoutWeight;
+    private TextInputLayout textInputLayoutHeight;
     private boolean isWeightInKg = true; // Default to true as "kg" is checked by default
     private boolean isHeightInCM = true; // Default to true as "cm" is checked by default
     private ComputeBMI computeBMI;
@@ -55,6 +59,17 @@ public class MainActivity extends AppCompatActivity {
 
         editTextWeight = findViewById(R.id.editTextWeight);
         editTextHeight = findViewById(R.id.editTextHeight);
+        textInputLayoutWeight = findViewById(R.id.textInputLayoutWeight);
+        textInputLayoutHeight = findViewById(R.id.textInputLayoutHeight);
+
+        // Clear any hints on EditText to avoid overlap with TextInputLayout
+        editTextWeight.setHint(null);
+        editTextHeight.setHint(null);
+
+        // Set initial hints on TextInputLayout
+        textInputLayoutWeight.setHint(getString(R.string.enter_weight_kg_hint));
+        textInputLayoutHeight.setHint(getString(R.string.enter_height_cm_hint));
+
         Button buttonCalculate = findViewById(R.id.buttonCalculate);
         TextView textViewResult = findViewById(R.id.textViewResult);
         View layoutBMIResult = findViewById(R.id.layoutBMIResult);
@@ -76,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
             if (checkedId == R.id.radioButtonKg) {
                 // "kg" is checked
                 isWeightInKg = true;
-                editTextWeight.setHint(R.string.enter_weight_kg_hint);
+                textInputLayoutWeight.setHint(getString(R.string.enter_weight_kg_hint));
             } else if (checkedId == R.id.radioButtonPound) {
                 // "pound" is checked
                 isWeightInKg = false;
-                editTextWeight.setHint(R.string.enter_weight_pound_hint);
+                textInputLayoutWeight.setHint(getString(R.string.enter_weight_pound_hint));
             }
         });
 
@@ -90,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
             if (checkedId == R.id.radioButtonCm) {
                 // "cm" is checked
                 isHeightInCM = true;
-                editTextHeight.setHint(R.string.enter_height_cm_hint);
+                textInputLayoutHeight.setHint(getString(R.string.enter_height_cm_hint));
             } else if (checkedId == R.id.radioButtonInch) {
                 // "inch" is checked
                 isHeightInCM = false;
-                editTextHeight.setHint(R.string.enter_height_inch_hint);
+                textInputLayoutHeight.setHint(getString(R.string.enter_height_inch_hint));
             }
         });
 

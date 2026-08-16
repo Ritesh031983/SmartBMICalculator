@@ -7,8 +7,13 @@ import java.util.regex.Pattern;
 public class SpeechParser {
 
     public sealed interface ParsingResult {
+        String weightStr();
+        String weightUnit();
+        String heightStr();
+        String heightUnit();
+
         record Success(String weightStr, String weightUnit, String heightStr, String heightUnit) implements ParsingResult {}
-        record Failure(String weightStr, String heightStr) implements ParsingResult {}
+        record Failure(String weightStr, String weightUnit, String heightStr, String heightUnit) implements ParsingResult {}
     }
 
     public static ParsingResult parse(String spokenText) {
@@ -23,10 +28,11 @@ public class SpeechParser {
         if (weightMatcher.find()) {
             weightStr = weightMatcher.group(1);
             String rawUnit = weightMatcher.group(2);
-            weightUnit = switch (Objects.requireNonNullElse(rawUnit, "")) {
-                case "pound", "pond" -> "pound";
-                default -> "kg";
-            };
+            if ("pound".equals(rawUnit) || "pond".equals(rawUnit)) {
+                weightUnit = "pound";
+            } else {
+                weightUnit = "kg";
+            }
         }
 
         String heightStr = null;
@@ -44,17 +50,18 @@ public class SpeechParser {
             } else if (Objects.nonNull(heightMatcher.group(3))) { // cm or inch case
                 heightStr = heightMatcher.group(3);
                 String unit = heightMatcher.group(4);
-                heightUnit = switch (Objects.requireNonNullElse(unit, "")) {
-                    case "cm" -> "cm";
-                    default -> "inch";
-                };
+                if ("cm".equals(unit)) {
+                    heightUnit = "cm";
+                } else {
+                    heightUnit = "inch";
+                }
             }
         }
 
         if (Objects.nonNull(weightStr) && Objects.nonNull(heightStr)) {
             return new ParsingResult.Success(weightStr, weightUnit, heightStr, heightUnit);
         } else {
-            return new ParsingResult.Failure(weightStr, heightStr);
+            return new ParsingResult.Failure(weightStr, weightUnit, heightStr, heightUnit);
         }
     }
 }

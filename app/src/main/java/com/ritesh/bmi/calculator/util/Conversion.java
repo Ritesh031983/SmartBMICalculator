@@ -24,4 +24,6 @@ public final class Conversion {
      * Formula: weight (kg) / (height (m))^2
      */
     public static final BinaryOperator<Float> calculateBMI = (weight, height) -> weight / (height * height);
+
+    public static final UnaryOperator<String> convertStringToIntString = s -> String.valueOf(Integer.parseInt(s));
 }

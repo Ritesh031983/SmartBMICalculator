@@ -60,7 +60,11 @@ public class SpeechParser {
         }
 
         if (Objects.nonNull(weightStr) && Objects.nonNull(heightStr)) {
-            return new ParsingResult.Success(weightStr, weightUnit, heightStr, heightUnit);
+
+            return new ParsingResult.Success(weightStr, weightUnit,
+                    Conversion.convertStringToIntString.apply(heightStr),
+                    heightUnit
+            );
         } else {
             return new ParsingResult.Failure(weightStr, weightUnit, heightStr, heightUnit);
         }

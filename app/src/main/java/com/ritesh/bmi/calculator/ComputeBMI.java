@@ -63,7 +63,7 @@ public class ComputeBMI {
 
         try {
             float weight = Float.parseFloat(weightStr);
-            int height = Integer.parseInt(heightStr);
+            float height = Float.parseFloat(heightStr);
 
             if (height <= 0) {
                 Toast.makeText(mainActivity, "Height must be positive value greater than 0", Toast.LENGTH_SHORT).show();
@@ -71,7 +71,7 @@ public class ComputeBMI {
             }
 
             float weightInKg = isWeightInKg ? weight : Conversion.convertPoundsToKilograms.apply(weight);
-            float heightInMeters = isHeightInCM ? Conversion.convertCmToMeters.apply(height) : Conversion.convertInchesToMeters.apply((float) height);
+            float heightInMeters = isHeightInCM ? Conversion.convertCmToMeters.apply(height) : Conversion.convertInchesToMeters.apply(height);
 
             // Calculate BMI: weight (kg) / (height (m))^2
             BMIResult bmiResult = new BMIResult(

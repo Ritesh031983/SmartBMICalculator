@@ -11,19 +11,17 @@ import java.util.function.UnaryOperator;
 public final class Conversion {
     private Conversion() {}
 
-    public static final BiFunction<Double, Double, Integer> convertFeetAndInchesToInches = (feet, inches) -> (int) ((feet * 12) + inches);
+    public static final BiFunction<Double, Double, Double> convertFeetAndInchesToInches = (feet, inches) -> (feet * 12) + inches;
 
     public static final UnaryOperator<Float> convertInchesToMeters = inches -> inches * 0.0254f;
 
     public static final UnaryOperator<Float> convertPoundsToKilograms = pounds -> pounds * 0.453592f;
 
-    public static final Function<Integer, Float> convertCmToMeters = cm -> (float) cm / 100;
+    public static final Function<Float, Float> convertCmToMeters = cm -> cm / 100f;
 
     /**
      * Calculate BMI
      * Formula: weight (kg) / (height (m))^2
      */
     public static final BinaryOperator<Float> calculateBMI = (weight, height) -> weight / (height * height);
-
-    public static final UnaryOperator<String> convertStringToIntString = s -> String.valueOf(Integer.parseInt(s));
 }

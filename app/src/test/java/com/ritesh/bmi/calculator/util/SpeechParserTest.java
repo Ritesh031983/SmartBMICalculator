@@ -19,7 +19,7 @@ public class SpeechParserTest {
     @Test
     public void testParseHeightCm() {
         SpeechParser.ParsingResult result = SpeechParser.parse("my height is 170 cm");
-        assertEquals("170", result.heightStr());
+        assertEquals("170.00", result.heightStr());
         assertEquals("cm", result.heightUnit());
     }
 
@@ -27,11 +27,11 @@ public class SpeechParserTest {
     public void testParseHeightFeetAndInches() {
         // 5 ft 10 in -> 70.0 inches
         SpeechParser.ParsingResult result = SpeechParser.parse("I am 5 foot 10 inches tall");
-        assertEquals("70.0", result.heightStr());
+        assertEquals("70.00", result.heightStr());
         assertEquals("inch", result.heightUnit());
 
         result = SpeechParser.parse("5 ft 6");
-        assertEquals("66.0", result.heightStr());
+        assertEquals("66.00", result.heightStr());
         assertEquals("inch", result.heightUnit());
     }
 
@@ -40,7 +40,14 @@ public class SpeechParserTest {
         SpeechParser.ParsingResult result = SpeechParser.parse("My weight is 80kg and height is 6 feet");
         assertEquals("80", result.weightStr());
         assertEquals("kg", result.weightUnit());
-        assertEquals("72.0", result.heightStr());
+        assertEquals("72.00", result.heightStr());
         assertEquals("inch", result.heightUnit());
+    }
+
+    @Test
+    public void testParseDecimals() {
+        SpeechParser.ParsingResult result = SpeechParser.parse("weight is 70.6 kg and height is 170.555 cm");
+        assertEquals("71", result.weightStr());
+        assertEquals("170.56", result.heightStr());
     }
 }

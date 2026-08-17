@@ -1,5 +1,6 @@
 package com.ritesh.bmi.calculator.util;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,7 +28,11 @@ public class SpeechParser {
         String weightStr = null;
         String weightUnit = null;
         if (weightMatcher.find()) {
-            weightStr = weightMatcher.group(1);
+            try {
+                double weight = Double.parseDouble(weightMatcher.group(1));
+                weightStr = String.valueOf((int) Math.round(weight));
+            } catch (NumberFormatException ignored) {
+            }
             String rawUnit = weightMatcher.group(2);
             if ("pound".equals(rawUnit) || "pond".equals(rawUnit)) {
                 weightUnit = "pound";
@@ -44,27 +49,27 @@ public class SpeechParser {
                     double feet = Double.parseDouble(Objects.requireNonNull(heightMatcher.group(1)));
                     double inches = Double.parseDouble(Objects.requireNonNullElse(heightMatcher.group(2), "0"));
                     
-                    heightStr = String.valueOf(Conversion.convertFeetAndInchesToInches.apply(feet, inches));
+                    heightStr = String.format(Locale.US, "%.2f", Conversion.convertFeetAndInchesToInches.apply(feet, inches));
                     heightUnit = "inch";
                 } catch (NumberFormatException ignored) {
                 }
             } else if (Objects.nonNull(heightMatcher.group(3))) { // cm or inch case
-                heightStr = heightMatcher.group(3);
-                String unit = heightMatcher.group(4);
-                if ("cm".equals(unit)) {
-                    heightUnit = "cm";
-                } else {
-                    heightUnit = "inch";
+                try {
+                    double height = Double.parseDouble(heightMatcher.group(3));
+                    heightStr = String.format(Locale.US, "%.2f", height);
+                    String unit = heightMatcher.group(4);
+                    if ("cm".equals(unit)) {
+                        heightUnit = "cm";
+                    } else {
+                        heightUnit = "inch";
+                    }
+                } catch (NumberFormatException ignored) {
                 }
             }
         }
 
         if (Objects.nonNull(weightStr) && Objects.nonNull(heightStr)) {
-
-            return new ParsingResult.Success(weightStr, weightUnit,
-                    Conversion.convertStringToIntString.apply(heightStr),
-                    heightUnit
-            );
+            return new ParsingResult.Success(weightStr, weightUnit, heightStr, heightUnit);
         } else {
             return new ParsingResult.Failure(weightStr, weightUnit, heightStr, heightUnit);
         }

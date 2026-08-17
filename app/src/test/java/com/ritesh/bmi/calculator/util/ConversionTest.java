@@ -7,9 +7,9 @@ public class ConversionTest {
 
     @Test
     public void testConvertFeetAndInchesToInches() {
-        assertEquals(70, Conversion.convertFeetAndInchesToInches.apply(5.0, 10.0), 0.001);
-        assertEquals(60, Conversion.convertFeetAndInchesToInches.apply(5.0, 0.0), 0.001);
-        assertEquals(12, Conversion.convertFeetAndInchesToInches.apply(1.0, 0.0), 0.001);
+        assertEquals(70.0, Conversion.convertFeetAndInchesToInches.apply(5.0, 10.0), 0.001);
+        assertEquals(60.0, Conversion.convertFeetAndInchesToInches.apply(5.0, 0.0), 0.001);
+        assertEquals(12.0, Conversion.convertFeetAndInchesToInches.apply(1.0, 0.0), 0.001);
     }
 
     @Test
@@ -24,7 +24,7 @@ public class ConversionTest {
 
     @Test
     public void testConvertCmToMeters() {
-        assertEquals(1.7f, Conversion.convertCmToMeters.apply(170), 0.001f);
+        assertEquals(1.7f, Conversion.convertCmToMeters.apply(170f), 0.001f);
     }
 
     @Test
